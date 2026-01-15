@@ -1,0 +1,55 @@
+﻿@using Nop.Web.Models.SupportRequests
+@model List<SupportRequestModel>
+@inject Nop.Services.Html.IHtmlFormatter htmlFormatter
+
+@{
+    Layout = "_ColumnsTwo";
+
+    NopHtml.AddTitleParts(T("PageTitle.Account.SupportRequests").Text);
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = 160 })
+}
+
+<div class="page account-page account-support-requests-page">
+    <div class="page-title">
+        <h1 style="float:left;">@T("Account.MyAccount") - @T("Account.SupportRequests")</h1>
+        <a style="float:right;" asp-action="CreateSupportRequest" class="button-1">@T("SupportRequests.CreateSupportRequest")</a>
+    </div>
+    <div class="page-body">
+        @foreach (var item in Model)
+        {
+            <div class="support-request-item">
+                <div class="support-request-item-head">
+                    <div class="support-request-title">
+                        <strong # @item.Id></strong> (@item.CreatedOn)
+                    </div>
+                </div>
+                <div class="support-request-item-content">
+                    <div class="support-request-text">
+                        @Html.Raw(htmlFormatter.FormatText(item.MessageText, false, true, false, false, false, false))
+                    </div>
+                    <div class="reply">
+                        @if (!string.IsNullOrWhiteSpace(item.ReplyText))
+                        {
+                            <div class="reply-header">
+                                <strong>@T("Account.SupportRequests.Reply")</strong> (@item.UpdatedOn)
+                            </div>
+                            <div class="reply-text">
+                                @Html.Raw(htmlFormatter.FormatText(item.ReplyText, false, true, false, false, false, false))
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="reply-text">
+                                @T("Account.SupportRequests.IsNotReplied")
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

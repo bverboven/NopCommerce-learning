@@ -1,0 +1,68 @@
+﻿@model Nop.Web.Areas.Admin.Models.SupportRequests.SupportRequestModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="Hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        @if (Model.ShowStoreName)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="StoreName" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.StoreName</div>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CustomerInfo" />
+                            </div>
+                            <div class="col-md-9">
+                                <a asp-controller="Customer" asp-action="Edit" asp-route-id="@Model.CustomerId">@Model.CustomerInfo</a>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MessageText" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.MessageText</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ReplyText" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.ReplyText</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedOn" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedOn</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UpdatedOn" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.UpdatedOn</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

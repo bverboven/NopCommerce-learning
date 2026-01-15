@@ -1,0 +1,34 @@
+﻿@model Nop.Web.Models.SupportRequests.CreateSupportRequestModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    NopHtml.AddTitleParts(T("PageTitle.Account.SupportRequests").Text);
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SupportRequests })
+}
+
+<div class="page account-page edit-support-request-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.SupportRequest.Add")</h1>
+    </div>
+    <div class="page-body">
+        <form asp-action="CreateSupportRequestSend" method="post">
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="MessageText" asp-postfix=":"></label>
+                        <textarea asp-for="MessageText"></textarea>
+                        <span asp-validation-for="MessageText"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="button-1">@T("SupportRequests.Add.Button")</button>
+            </div>
+        </form>
+    </div>
+</div>

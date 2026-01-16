@@ -307,4 +307,13 @@ public static partial class MessageTemplateSystemNames
     public const string CONTACT_VENDOR_MESSAGE = "Service.ContactVendor";
 
     #endregion
+
+    #region Support Requests
+
+    /// <summary>
+    /// Represents system name of notification about support request reply
+    /// </summary>
+    public const string CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION = "SupportRequests.SupportRequestReply";
+
+    #endregion
 }

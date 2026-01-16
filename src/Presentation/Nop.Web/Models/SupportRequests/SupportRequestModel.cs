@@ -6,6 +6,7 @@ public record SupportRequestModel : BaseNopEntityModel
 {
     public string MessageText { get; set; }
     public string ReplyText { get; set; }
+    public int Rating { get; set; }
     public DateTime CreatedOn { get; set; }
     public DateTime UpdatedOn { get; set; }
 }

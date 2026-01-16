@@ -21,6 +21,7 @@ public class SupportRequestModelFactory(IDateTimeHelper dateTimeHelper)
         model.Id = item.Id;
         model.MessageText = item.MessageText;
         model.ReplyText = item.ReplyText;
+        model.Rating = item.Rating;
 
         model.CreatedOn = await dateTimeHelper.ConvertToUserTimeAsync(item.CreatedOnUtc, DateTimeKind.Utc);
         if (item.UpdatedOnUtc.HasValue)
@@ -46,6 +47,30 @@ public class SupportRequestModelFactory(IDateTimeHelper dateTimeHelper)
             var model = new SupportRequestModel();
             await PrepareSupportRequestModelAsync(item, model);
             models.Add(model);
+        }
+    }
+
+    public virtual async Task PrepareEditSupportRequestModelAsync(SupportRequest item, EditSupportRequestModel model)
+    {
+        if (item == null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        if (model == null)
+        {
+            throw new ArgumentNullException(nameof(model));
+        }
+
+        model.Id = item.Id;
+        model.MessageText = item.MessageText;
+        model.ReplyText = item.ReplyText;
+        model.Rating = item.Rating;
+        model.CreatedOn = await dateTimeHelper.ConvertToUserTimeAsync(item.CreatedOnUtc, DateTimeKind.Utc);
+
+        if (item.UpdatedOnUtc.HasValue)
+        {
+            model.UpdatedOn = await dateTimeHelper.ConvertToUserTimeAsync(item.UpdatedOnUtc.Value, DateTimeKind.Utc);
         }
     }
 }

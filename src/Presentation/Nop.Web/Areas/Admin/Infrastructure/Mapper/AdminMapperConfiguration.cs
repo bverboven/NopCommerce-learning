@@ -25,6 +25,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.SupportRequests;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Domain.Vendors;
@@ -62,6 +63,7 @@ using Nop.Web.Areas.Admin.Models.Settings;
 using Nop.Web.Areas.Admin.Models.Shipping;
 using Nop.Web.Areas.Admin.Models.ShoppingCart;
 using Nop.Web.Areas.Admin.Models.Stores;
+using Nop.Web.Areas.Admin.Models.SupportRequests;
 using Nop.Web.Areas.Admin.Models.Tasks;
 using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
@@ -116,6 +118,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
         CreateVendorsMaps();
         CreateWarehouseMaps();
         CreateMenuMaps();
+        CreateSupportRequestMaps();
 
         //add some generic mapping rules
         this.Internal().ForAllMaps((mapConfiguration, map) =>
@@ -439,7 +442,7 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(settings => settings.UseLinksInRequiredProductWarnings, options => options.Ignore())
             .ForMember(settings => settings.UseStandardSearchWhenSearchProviderThrowsException, options => options.Ignore())
             .ForMember(settings => settings.ActiveSearchProviderSystemName, options => options.Ignore())
-            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());        
+            .ForMember(settings => settings.VendorProductReviewsPageSize, options => options.Ignore());
 
         CreateMap<ProductCategory, CategoryProductModel>()
             .ForMember(model => model.ProductName, options => options.Ignore());
@@ -1810,6 +1813,16 @@ public partial class AdminMapperConfiguration : Profile, IOrderedMapperProfile
             .ForMember(entity => entity.Address, options => options.Ignore());
         CreateMap<WarehouseModel, Warehouse>()
             .ForMember(entity => entity.AddressId, options => options.Ignore());
+    }
+
+    public virtual void CreateSupportRequestMaps()
+    {
+        CreateMap<SupportRequest, SupportRequestModel>()
+            .ForMember(model => model.CustomerInfo, mo => mo.Ignore())
+            .ForMember(model => model.CreatedOn, mo => mo.Ignore())
+            .ForMember(model => model.UpdatedOn, mo => mo.Ignore())
+            .ForMember(model => model.StoreName, mo => mo.Ignore())
+            .ForMember(model => model.ShowStoreName, mo => mo.Ignore());
     }
 
     /// <summary>

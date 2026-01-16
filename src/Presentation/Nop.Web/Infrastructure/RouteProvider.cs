@@ -785,6 +785,19 @@ public partial class RouteProvider : BaseRouteProvider, IRouteProvider
         //fallback is intended to handle cases when no other endpoint has matched
         //we use it to invoke [CheckLanguageSeoCode] and give a chance to find a localized route
         endpointRouteBuilder.MapFallbackToController("FallbackRedirect", "Common");
+
+        // Support Requests
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerSupportRequests",
+            pattern: $"{lang}/customer/supportrequests",
+            defaults: new { controller = "SupportRequest", action = "CustomerSupportRequests" });
+
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerSupportRequestsCreate",
+            pattern: $"{lang}/customer/supportrequests/create",
+            defaults: new { controller = "SupportRequest", action = "CreateSupportRequest" });
+
+        endpointRouteBuilder.MapControllerRoute(name: "CustomerSupportRequestsView",
+            pattern: $"{lang}/customer/supportrequests/view/{{id:min(0)}}",
+            defaults: new { controller = "SupportRequest", action = "EditSupportRequest" });
     }
 
     #endregion

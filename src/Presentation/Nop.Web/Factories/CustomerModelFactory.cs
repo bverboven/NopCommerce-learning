@@ -777,6 +777,14 @@ public partial class CustomerModelFactory : ICustomerModelFactory
             });
         }
 
+        model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+        {
+            RouteName = "CustomerSupportRequests",
+            Title = "Support requests",
+            Tab = (int)CustomerNavigationEnum.SupportRequests,
+            ItemClass = "customer-support-requests"
+        });
+
         model.SelectedTab = selectedTabId;
 
         return model;

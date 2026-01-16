@@ -19,6 +19,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.SupportRequests;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
@@ -535,6 +536,16 @@ public partial class MessageTokenProvider : IMessageTokenProvider
                         "%ContactUs.SenderName%",
                         "%ContactUs.Body%"
                     }
+                },
+
+                // Support Request tokens
+                {
+                    TokenGroupNames.SupportRequest,
+                    new []
+                    {
+                        "%SupportRequest.Url%",
+                        "%SupportRequest.Id%"
+                    }
                 }
             };
 
@@ -1007,6 +1018,15 @@ public partial class MessageTokenProvider : IMessageTokenProvider
 
     #region Methods
 
+    public virtual async Task AddSupportRequestTokensAsync(IList<Token> tokens, SupportRequest item)
+    {
+        var itemUrl = await RouteUrlAsync(routeName: "CustomerSupportRequestsView", routeValues: new { id = item.Id });
+        tokens.Add(new Token("SupportRequest.Url", itemUrl, true));
+        tokens.Add(new Token("SupportRequest.Id", item.Id));
+
+        await _eventPublisher.EntityTokensAddedAsync(item, tokens);
+    }
+
     /// <summary>
     /// Add store tokens
     /// </summary>
@@ -1313,7 +1333,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
         var passwordRecoveryUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.PASSWORD_RECOVERY_CONFIRM, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.PasswordRecoveryTokenAttribute), guid = customer.CustomerGuid });
         var accountActivationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.ACCOUNT_ACTIVATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.AccountActivationTokenAttribute), guid = customer.CustomerGuid });
         var emailRevalidationUrl = await RouteUrlAsync(routeName: NopRouteNames.Standard.EMAIL_REVALIDATION, routeValues: new { token = await _genericAttributeService.GetAttributeAsync<string>(customer, NopCustomerDefaults.EmailRevalidationTokenAttribute), guid = customer.CustomerGuid });
-        
+
         tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
         tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
         tokens.Add(new Token("Customer.EmailRevalidationURL", emailRevalidationUrl, true));
@@ -1649,7 +1669,7 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.ORDER_COMPLETED_STORE_OWNER_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_CANCELLED_VENDOR_NOTIFICATION or
             MessageTemplateSystemNames.ORDER_CANCELLED_CUSTOMER_NOTIFICATION or
-            MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION=> [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
+            MessageTemplateSystemNames.ORDER_CANCELLED_STORE_OWNER_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.OrderTokens, TokenGroupNames.CustomerTokens],
 
             MessageTemplateSystemNames.SHIPMENT_SENT_CUSTOMER_NOTIFICATION or
             MessageTemplateSystemNames.SHIPMENT_READY_FOR_PICKUP_CUSTOMER_NOTIFICATION or
@@ -1694,6 +1714,9 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.BACK_IN_STOCK_NOTIFICATION => [TokenGroupNames.StoreTokens, TokenGroupNames.CustomerTokens, TokenGroupNames.ProductBackInStockTokens],
             MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
             MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],
+
+            MessageTemplateSystemNames.CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION => [TokenGroupNames.SupportRequest, TokenGroupNames.CustomerTokens, TokenGroupNames.StoreTokens],
+
             _ => [],
         };
     }

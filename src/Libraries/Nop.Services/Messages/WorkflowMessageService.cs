@@ -9,6 +9,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.SupportRequests;
 using Nop.Core.Domain.Vendors;
 using Nop.Core.Events;
 using Nop.Services.Affiliates;
@@ -2939,6 +2940,50 @@ public partial class WorkflowMessageService : IWorkflowMessageService
         return email.Id;
     }
 
+    #endregion
+
+    #region Support Requests
+
+    public virtual async Task<IList<int>> SendSupportRequestReplyCustomerNotificationMessageAsync(SupportRequest item, int languageId)
+    {
+        if (item == null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        var store = await _storeService.GetStoreByIdAsync(item.StoreId)
+                    ?? await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+        {
+            return new List<int>();
+        }
+
+        var customer = await _customerService.GetCustomerByIdAsync(item.CustomerId);
+
+        // tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddCustomerTokensAsync(commonTokens, customer);
+        await _messageTokenProvider.AddSupportRequestTokensAsync(commonTokens, item);
+
+        return await messageTemplates
+            .SelectAwait(async template =>
+            {
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(template, languageId);
+                var tokens = new List<Token>(commonTokens);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+                await _eventPublisher.MessageTokensAddedAsync(template, tokens);
+
+                var toEmail = customer.Email;
+                var toName = await _customerService.GetCustomerFullNameAsync(customer);
+
+                return await SendNotificationAsync(template, emailAccount, languageId, tokens, toEmail, toName);
+            })
+            .ToListAsync();
+    }
     #endregion
 
     #endregion

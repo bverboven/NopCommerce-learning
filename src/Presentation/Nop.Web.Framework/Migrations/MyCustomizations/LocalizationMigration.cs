@@ -62,8 +62,27 @@ public class LocalizationMigration : Migration
             ["SupportRequests.Add.Button"] = "Send",
             ["SupportRequests.CreateSupportRequest"] = "Create",
 
-            ["Plugins.Misc.SupportRequests.Admin.Updated"] = "Support request updated",
+            ["Admin.SupportRequests.EditSupportRequest"] = "Edit support request",
+            ["Admin.SupportRequests.BackToList"] = "Back to list",
+            ["Admin.SupportRequests.Updated"] = "The support request was updated successfully",
 
+            ["Account.SupportRequests.View"] = "Support request details",
+            ["SupportRequest.Fields.Rating"] = "Rating",
+            ["SupportRequest.Fields.Rating.Bad"] = "Bad",
+            ["SupportRequest.Fields.Rating.NotGood"] = "Not good",
+            ["SupportRequest.Fields.Rating.NotBadNotExcellent"] = "Not bad not excellent",
+            ["SupportRequest.Fields.Rating.Good"] = "Good",
+            ["SupportRequest.Fields.Rating.Excellent"] = "Excellent",
+
+            ["SupportRequest.Fields.Rate.Button"] = "Rate",
+            ["SupportRequest.Fields.ReplyText"] = "Reply",
+            ["SupportRequest.Fields.CreatedOn"] = "Created on",
+            ["SupportRequest.Fields.UpdatedOn"] = "Updated on",
+
+            ["Account.SupportRequests.ViewSupportRequest"] = "View",
+            ["SupportRequests.Link.Text"] = "do you need support?",
+            ["Admin.ContentManagement.MessageTemplates.Description.SupportRequest.NewSupportRequest"] = "This message template is used when a new support request is created. The message is received by a store owner.",
+            ["Admin.Contentmanagement.MessageTemplates.Description.SupportRequest.SupportRequestReply"] = "This message template is used when a support team replies to a support request. The message is received by a customer who created the support request."
         });
     }
 

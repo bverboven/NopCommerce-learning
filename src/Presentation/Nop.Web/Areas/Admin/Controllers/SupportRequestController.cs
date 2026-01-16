@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nop.Core.Domain.Customers;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
@@ -10,7 +12,8 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Web.Areas.Admin.Controllers;
 
 public class SupportRequestController(ISupportRequestService service, SupportRequestModelFactory factory,
-    INotificationService notificationService, ILocalizationService localizationService) : BaseAdminController
+    INotificationService notificationService, ILocalizationService localizationService, IGenericAttributeService genericAttributeService,
+    IWorkflowMessageService workflowMessageService) : BaseAdminController
 {
     [CheckPermission(StandardPermission.Configuration.MANAGE_SUPPORT_REQUESTS)]
     public virtual async Task<IActionResult> List()
@@ -56,9 +59,23 @@ public class SupportRequestController(ISupportRequestService service, SupportReq
             item.ReplyText = model.ReplyText;
             item.UpdatedOnUtc = DateTime.UtcNow;
 
+            var customerNotifiedOfReplyKey = "CustomerNotifiedOfReply";
+            var customerNotifiedOfReply = await genericAttributeService.GetAttributeAsync<bool>(item, customerNotifiedOfReplyKey);
+            if (!string.IsNullOrWhiteSpace(item.ReplyText) && !customerNotifiedOfReply)
+            {
+                // get en-US since NopCustomerDefaults.LanguageIdAttribute is not created yet
+                var customerLanguageId = await genericAttributeService.GetAttributeAsync<Customer, int>(item.CustomerId, NopCustomerDefaults.LanguageIdAttribute, item.StoreId, 1);
+
+                var queuedEmailIds = await workflowMessageService.SendSupportRequestReplyCustomerNotificationMessageAsync(item, customerLanguageId);
+                if (queuedEmailIds.Any())
+                {
+                    await genericAttributeService.SaveAttributeAsync(item, customerNotifiedOfReplyKey, true);
+                }
+            }
+
             await service.UpdateSupportRequestAsync(item);
 
-            notificationService.SuccessNotification(await localizationService.GetResourceAsync("Plugins.Misc.SupportRequests.Admin.Updated"));
+            notificationService.SuccessNotification(await localizationService.GetResourceAsync("Admin.SupportRequests.Updated"));
 
             return continueEditing
                 ? RedirectToAction("Edit", new { id = item.Id })

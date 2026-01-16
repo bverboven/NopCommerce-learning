@@ -69,4 +69,60 @@ public class SupportRequestController(ISupportRequestService service, SupportReq
 
         return View("CreateSupportRequest", model);
     }
+
+    public virtual async Task<IActionResult> EditSupportRequest(int id)
+    {
+        var currentCustomer = await workContext.GetCurrentCustomerAsync();
+
+        if (await customerService.IsGuestAsync((currentCustomer)))
+        {
+            return Challenge();
+        }
+
+        var item = await service.GetSupportRequestByIdAsync(id);
+
+        if (item == null || item.CustomerId != currentCustomer.Id)
+            return RedirectToAction("CustomerSupportRequests");
+
+        var model = new EditSupportRequestModel();
+        await modelFactory.PrepareEditSupportRequestModelAsync(item, model);
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public virtual async Task<IActionResult> EditSupportRequestSend(EditSupportRequestModel model)
+    {
+        var currentCustomer = await workContext.GetCurrentCustomerAsync();
+
+        if (await customerService.IsGuestAsync((currentCustomer)))
+        {
+            return Challenge();
+        }
+
+        if (ModelState.IsValid)
+        {
+            var item = await service.GetSupportRequestByIdAsync(model.Id);
+
+            if (item == null || item.CustomerId != currentCustomer.Id)
+                return RedirectToAction("CustomerSupportRequests");
+
+            if (!string.IsNullOrWhiteSpace(item.ReplyText) && item.Rating == 0)
+            {
+                var rating = model.Rating;
+                if (rating < 1 || rating > 5)
+                {
+                    rating = 0;
+                }
+
+                item.Rating = rating;
+
+                await service.UpdateSupportRequestAsync(item);
+
+                return RedirectToAction("EditSupportRequest", new { id = item.Id });
+            }
+        }
+
+        return View("EditSupportRequest", model);
+    }
 }

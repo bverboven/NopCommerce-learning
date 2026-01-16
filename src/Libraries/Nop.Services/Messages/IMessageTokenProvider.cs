@@ -7,6 +7,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.SupportRequests;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Messages;
@@ -25,6 +26,14 @@ public partial interface IMessageTokenProvider
     /// <param name="languageId">Language identifier</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     Task AddStoreTokensAsync(IList<Token> tokens, Store store, EmailAccount emailAccount, int languageId);
+
+    /// <summary>
+    /// Asynchronously associates the specified tokens with a support request.
+    /// </summary>
+    /// <param name="tokens">The collection of tokens to be added to the support request. Cannot be null or contain null elements.</param>
+    /// <param name="item">The support request to which the tokens will be associated. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task AddSupportRequestTokensAsync(IList<Token> tokens, SupportRequest item);
 
     /// <summary>
     /// Add order tokens

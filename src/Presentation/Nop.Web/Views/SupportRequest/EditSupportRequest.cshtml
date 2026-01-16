@@ -1,0 +1,93 @@
+﻿@model Nop.Web.Models.SupportRequests.EditSupportRequestModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    NopHtml.AddTitleParts(T("PageTitle.Account.SupportRequests").Text);
+}
+
+@section left {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.SupportRequests })
+}
+
+<div class="page account-page edit-support-request-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.SupportRequests.View")</h1>
+    </div>
+    <div class="page-body">
+        <form asp-action="EditSupportRequestSend" method="post">
+            <div asp-validation-summary="ModelOnly" class="message-error" class="message-error">
+                <input type="hidden" asp-for="Id" />
+                <div class="fieldset">
+                    <div class="inputs">
+                        <label>#</label>
+                        <span><strong>@Model.Id</strong></span>
+                    </div>
+                    <div class="inputs">
+                        <label asp-for="CreatedOn" asp-postfix=":"></label>
+                        <span>@Model.CreatedOn</span>
+                    </div>
+                    <div class="inputs">
+                        <label asp-for="MessageText" asp-postfix=":"></label>
+                        <span>@Model.MessageText</span>
+                    </div>
+                    @if (Model.UpdatedOn.HasValue)
+                    {
+                        <div class="inputs">
+                            <label asp-for="UpdatedOn" asp-postfix=":"></label>
+                            <span>@Model.UpdatedOn</span>
+                        </div>
+                    }
+                    <div class="inputs">
+                        <label asp-for="ReplyText" asp-postfix=":"></label>
+                        <span>
+                            @if (!string.IsNullOrWhiteSpace(Model.ReplyText))
+                            {
+                                @Model.ReplyText
+                            }
+                            else
+                            {
+                                @T("Account.SupportRequests.IsNotReplied")
+                            }
+                        </span>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.ReplyText))
+                    {
+                        <div class="inputs">
+                            <label asp-for="Rating" asp-postfix=":"></label>
+                            @if (Model.Rating > 0)
+                            {
+                                var ratingPercent = Model.Rating * 20;
+                                <div class="support-request-rating">
+                                    <div style="width:@(ratingPercent)%"></div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="rating-wrapper">
+                                    <div class="label first">@T("SupportRequest.Fields.Rating.Bad")</div>
+                                    <div class="rating-options">
+                                        <input asp-for="Rating" value="1" type="radio" id="addrating_1" aria-label="@T("SupportRequest.Fields.Rating.Bad")" />
+                                        <input asp-for="Rating" value="2" type="radio" id="addrating_2" aria-label="@T("SupportRequest.Fields.Rating.NotGood")" />
+                                        <input asp-for="Rating" value="3" type="radio" id="addrating_3" aria-label="@T("SupportRequest.Fields.Rating.NotBadNotExcellent")" />
+                                        <input asp-for="Rating" value="4" type="radio" id="addrating_4" aria-label="@T("SupportRequest.Fields.Rating.Good")" />
+                                        <input asp-for="Rating" value="5" type="radio" id="addrating_5" aria-label="@T("SupportRequest.Fields.Rating.Excellent")" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(Model.ReplyText) && Model.Rating == 0)
+            {
+                <div class="buttons">
+                    <button type="submit" class="button-1">
+                        @T("SupportRequests.Rate.Button")
+                    </button>
+                </div>
+            }
+        </form>
+    </div>
+</div>

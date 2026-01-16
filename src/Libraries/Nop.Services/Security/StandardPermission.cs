@@ -116,6 +116,7 @@ public partial class StandardPermission
 
     public partial class Configuration
     {
+        public const string MANAGE_SUPPORT_REQUESTS = "ManageSupportRequests";
         public const string MANAGE_WIDGETS = $"{nameof(Configuration)}.ManageWidgets";
         public const string MANAGE_COUNTRIES = $"{nameof(Configuration)}.ManageCountries";
         public const string MANAGE_LANGUAGES = $"{nameof(Configuration)}.ManageLanguages";

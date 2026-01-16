@@ -134,4 +134,9 @@ public static partial class TokenGroupNames
     /// Represents tokens with information about contact vendor
     /// </summary>
     public static string ContactVendor => "Contact vendor tokens";
+
+    /// <summary>
+    /// Gets the token string used to identify support request operations.
+    /// </summary>
+    public static string SupportRequest => "Support request tokens";
 }

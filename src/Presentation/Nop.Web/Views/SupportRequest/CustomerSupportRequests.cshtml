@@ -21,10 +21,17 @@
     <div class="page-body">
         @foreach (var item in Model)
         {
+            var ratingPercent = item.Rating * 20;
             <div class="support-request-item">
                 <div class="support-request-item-head">
-                    <div class="support-request-title">
+                    <div class="support-request-title" style="float: left">
                         <strong # @item.Id></strong> (@item.CreatedOn)
+                    </div>
+                    <a asp-action="EditSupportRequest" asp-route-id="@item.Id" class="button-1">@T("Account.SupportRequests.ViewSupportRequests")</a>
+                    <div class="rating-wrapper" style="float: right">
+                        <div class="support-request-rating">
+                            <div style="width:@(ratingPercent)%">Rating</div>
+                        </div>
                     </div>
                 </div>
                 <div class="support-request-item-content">

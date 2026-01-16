@@ -6,6 +6,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.SupportRequests;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Messages;
@@ -740,5 +741,9 @@ public partial interface IWorkflowMessageService
         string fromEmail = null, string fromName = null, string subject = null,
         bool ignoreDelayBeforeSend = false);
 
+    #endregion
+
+    #region SupportRequests
+    Task<IList<int>> SendSupportRequestReplyCustomerNotificationMessageAsync(SupportRequest item, int languageId);
     #endregion
 }

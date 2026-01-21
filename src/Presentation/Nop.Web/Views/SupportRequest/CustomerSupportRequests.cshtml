@@ -10,7 +10,7 @@
 
 @section left
 {
-    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = 160 })
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.SupportRequests })
 }
 
 <div class="page account-page account-support-requests-page">

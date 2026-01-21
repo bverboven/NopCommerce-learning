@@ -82,7 +82,7 @@ public class LocalizationMigration : Migration
             ["Account.SupportRequests.ViewSupportRequest"] = "View",
             ["SupportRequests.Link.Text"] = "do you need support?",
             ["Admin.ContentManagement.MessageTemplates.Description.SupportRequest.NewSupportRequest"] = "This message template is used when a new support request is created. The message is received by a store owner.",
-            ["Admin.ContentManagement.MessageTemplates.Description.SupportRequest.SupportRequestReply"] = "This message template is used when a support team replies to a support request. The message is received by a customer who created the support request."
+            ["Admin.ContentManagement.MessageTemplates.Description.SupportRequest.SupportRequestReply"] = "This message template is used when a support team replies to a support request. The message is received by a customer who created the support request.",
         });
     }
 

@@ -19,6 +19,7 @@
         }
         <div class="master-column-wrapper">
             @RenderBody()
+            @await Component.InvokeAsync("SupportRequestLink")
         </div>
         @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.ContentAfter })
     </main>

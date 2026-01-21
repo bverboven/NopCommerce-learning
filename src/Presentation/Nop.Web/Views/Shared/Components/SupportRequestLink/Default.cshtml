@@ -1,0 +1,8 @@
+﻿@model Nop.Web.Models.SupportRequests.SupportRequestLinkModel
+
+@if (Model.ShowLink && !string.IsNullOrWhiteSpace(Model.CustomerName))
+{
+    <a asp-route="CustomerSupportRequestsCreate" class="create-support-request-link">
+        @Model.CustomerName @T("SupportRequests.Link.Text")
+    </a>
+}

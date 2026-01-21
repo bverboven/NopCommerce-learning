@@ -315,5 +315,7 @@ public static partial class MessageTemplateSystemNames
     /// </summary>
     public const string CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION = "SupportRequests.SupportRequestReply";
 
+    public const string STORE_OWNER_SUPPORT_REQUEST_NOTIFICATION = "SupportRequests.NewSupportRequest";
+
     #endregion
 }

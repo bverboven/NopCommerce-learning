@@ -745,5 +745,6 @@ public partial interface IWorkflowMessageService
 
     #region SupportRequests
     Task<IList<int>> SendSupportRequestReplyCustomerNotificationMessageAsync(SupportRequest item, int languageId);
+    Task<IList<int>> SendSupportRequestStoreOwnerNotificationMessageAsync(SupportRequest item, int languageId);
     #endregion
 }

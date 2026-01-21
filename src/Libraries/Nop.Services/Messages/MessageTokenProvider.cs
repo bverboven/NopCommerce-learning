@@ -1715,7 +1715,10 @@ public partial class MessageTokenProvider : IMessageTokenProvider
             MessageTemplateSystemNames.CONTACT_US_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactUs],
             MessageTemplateSystemNames.CONTACT_VENDOR_MESSAGE => [TokenGroupNames.StoreTokens, TokenGroupNames.ContactVendor],
 
-            MessageTemplateSystemNames.CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION => [TokenGroupNames.SupportRequest, TokenGroupNames.CustomerTokens, TokenGroupNames.StoreTokens],
+            MessageTemplateSystemNames.CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION 
+                => [TokenGroupNames.SupportRequest, TokenGroupNames.CustomerTokens, TokenGroupNames.StoreTokens],
+            MessageTemplateSystemNames.STORE_OWNER_SUPPORT_REQUEST_NOTIFICATION
+                => [TokenGroupNames.SupportRequest, TokenGroupNames.StoreTokens],
 
             _ => [],
         };

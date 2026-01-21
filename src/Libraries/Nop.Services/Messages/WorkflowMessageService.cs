@@ -2943,7 +2943,6 @@ public partial class WorkflowMessageService : IWorkflowMessageService
     #endregion
 
     #region Support Requests
-
     public virtual async Task<IList<int>> SendSupportRequestReplyCustomerNotificationMessageAsync(SupportRequest item, int languageId)
     {
         if (item == null)
@@ -2980,6 +2979,43 @@ public partial class WorkflowMessageService : IWorkflowMessageService
                 var toEmail = customer.Email;
                 var toName = await _customerService.GetCustomerFullNameAsync(customer);
 
+                return await SendNotificationAsync(template, emailAccount, languageId, tokens, toEmail, toName);
+            })
+            .ToListAsync();
+    }
+    public virtual async Task<IList<int>> SendSupportRequestStoreOwnerNotificationMessageAsync(SupportRequest item, int languageId)
+    {
+        if (item == null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        var store = await _storeService.GetStoreByIdAsync(item.StoreId)
+                    ?? await _storeContext.GetCurrentStoreAsync();
+        languageId = await EnsureLanguageIsActiveAsync(languageId, store.Id);
+
+        var messageTemplates = await GetActiveMessageTemplatesAsync(MessageTemplateSystemNames.STORE_OWNER_SUPPORT_REQUEST_NOTIFICATION, store.Id);
+        if (!messageTemplates.Any())
+        {
+            return new List<int>();
+        }
+
+        var customer = await _customerService.GetCustomerByIdAsync(item.CustomerId);
+        // tokens
+        var commonTokens = new List<Token>();
+        await _messageTokenProvider.AddSupportRequestTokensAsync(commonTokens, item);
+
+        return await messageTemplates
+            .SelectAwait(async template =>
+            {
+                var emailAccount = await GetEmailAccountOfMessageTemplateAsync(template, languageId);
+
+                var tokens = new List<Token>(commonTokens);
+                await _messageTokenProvider.AddStoreTokensAsync(tokens, store, emailAccount, languageId);
+
+                await _eventPublisher.MessageTokensAddedAsync(template, tokens);
+
+                var (toEmail, toName) = await GetStoreOwnerNameAndEmailAsync(emailAccount);
                 return await SendNotificationAsync(template, emailAccount, languageId, tokens, toEmail, toName);
             })
             .ToListAsync();

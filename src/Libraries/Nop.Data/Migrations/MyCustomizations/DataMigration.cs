@@ -1,18 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentMigrator;
+﻿using FluentMigrator;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Migrations.MyCustomizations;
 
-[NopMigration("2026-01-16 10:30:00", "4.90.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
+[NopMigration("2026-01-21 12:30:00", "4.90.0", UpdateMigrationType.Data, MigrationProcessType.Update)]
 public class DataMigration(INopDataProvider dataProvider, EmailAccountSettings emailAccountSettings) : Migration
 {
     public override void Up()
     {
+        // New permission
+        if (!dataProvider.GetTable<PermissionRecord>().Any(pr =>
+                string.Compare(pr.SystemName, "ManageSupportRequests", StringComparison.OrdinalIgnoreCase) == 0))
+        {
+            var manageSupportRequestsPermission = dataProvider.InsertEntity(new PermissionRecord
+            {
+                Name = "Admin area. Manage Support Requests",
+                SystemName = "ManageSupportRequests",
+                Category = "SupportRequests"
+            });
+
+            // add it to the Admin role by default
+            var adminRole = dataProvider.GetTable<CustomerRole>()
+                .First(x => x.IsSystemRole && x.SystemName == NopCustomerDefaults.AdministratorsRoleName);
+
+            dataProvider.InsertEntity(new PermissionRecordCustomerRoleMapping
+            {
+                CustomerRoleId = adminRole.Id,
+                PermissionRecordId = manageSupportRequestsPermission.Id
+            });
+        }
+
+
+        // Message Templates
         var messageTemplateTable = dataProvider.GetTable<MessageTemplate>();
 
         if (!messageTemplateTable.Any(mt => string.Compare(mt.Name,
@@ -24,7 +45,8 @@ public class DataMigration(INopDataProvider dataProvider, EmailAccountSettings e
                 Name = MessageTemplateSystemNames.CUSTOMER_SUPPORT_REQUEST_REPLY_NOTIFICATION,
                 Subject = "%Store.Name%. Support request has been replied",
                 Body = "Hello %Customer.FullName%! The <a href=\"%SupportRequest.Url%\">support request</a> has been replied.",
-                EmailAccountId = emailAccountSettings.DefaultEmailAccountId
+                EmailAccountId = emailAccountSettings.DefaultEmailAccountId,
+                IsActive = true
             });
         }
     }

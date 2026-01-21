@@ -5,7 +5,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.MyCustomizations;
 
-[NopSchemaMigration("2026-01-16 13:00:00", "SchemaMigration for 4.90.0", MigrationProcessType.NoMatter)]
+[NopSchemaMigration("2026-01-20 13:00:00", "SchemaMigration for 4.90.0", MigrationProcessType.NoMatter)]
 public class SchemaMigration : ForwardOnlyMigration
 {
     public override void Up()

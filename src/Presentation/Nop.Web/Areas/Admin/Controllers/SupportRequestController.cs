@@ -41,7 +41,7 @@ public class SupportRequestController(ISupportRequestService service, SupportReq
         if (item == null)
             return RedirectToAction("List");
 
-        var model = factory.PrepareSupportRequestModelAsync(null, item);
+        var model = await factory.PrepareSupportRequestModelAsync(null, item);
 
         return View(model);
     }

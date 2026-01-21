@@ -21,30 +21,32 @@
     <div class="page-body">
         @foreach (var item in Model)
         {
-            var ratingPercent = item.Rating * 20;
             <div class="support-request-item">
                 <div class="support-request-item-head">
                     <div class="support-request-title" style="float: left">
-                        <strong # @item.Id></strong> (@item.CreatedOn)
+                        <strong># @item.Id</strong> (@item.CreatedOn)
                     </div>
-                    <a asp-action="EditSupportRequest" asp-route-id="@item.Id" class="button-1">@T("Account.SupportRequests.ViewSupportRequests")</a>
-                    <div class="rating-wrapper" style="float: right">
-                        <div class="support-request-rating">
-                            <div style="width:@(ratingPercent)%">Rating</div>
-                        </div>
+                    <div class="rating-wrapper" style="float: right;">
+                        <span style="display: inline-block; vertical-align: top;">
+                            @for (var i = 0; i < item.Rating; i++)
+                            {
+                                <span style="font-size: 2rem; padding: 0 .25rem;">*</span>
+                            }
+                        </span>
+                        <a asp-action="EditSupportRequest" asp-route-id="@item.Id" class="button-1">@T("Account.SupportRequests.ViewSupportRequest")</a>
                     </div>
                 </div>
-                <div class="support-request-item-content">
-                    <div class="support-request-text">
+                <div class="support-request-item-content" style="clear: both;">
+                    <div class="support-request-text" style="margin: .25rem 0;">
                         @Html.Raw(htmlFormatter.FormatText(item.MessageText, false, true, false, false, false, false))
                     </div>
                     <div class="reply">
                         @if (!string.IsNullOrWhiteSpace(item.ReplyText))
                         {
                             <div class="reply-header">
-                                <strong>@T("Account.SupportRequests.Reply")</strong> (@item.UpdatedOn)
+                                <strong>@T("Account.SupportRequests.Reply")</strong> <em>(@item.UpdatedOn)</em>
                             </div>
-                            <div class="reply-text">
+                            <div class="reply-text" style="margin: .25rem 0; font-style: italic;">
                                 @Html.Raw(htmlFormatter.FormatText(item.ReplyText, false, true, false, false, false, false))
                             </div>
                         }

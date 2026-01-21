@@ -41,7 +41,8 @@
                                 <nop-label asp-for="ReplyText" />
                             </div>
                             <div class="col-md-9">
-                                <div class="form-text-row">@Model.ReplyText</div>
+                                <nop-textarea asp-for="ReplyText"></nop-textarea>
+                                <span asp-validation-for="ReplyText"></span>
                             </div>
                         </div>
                         <div class="form-group row">

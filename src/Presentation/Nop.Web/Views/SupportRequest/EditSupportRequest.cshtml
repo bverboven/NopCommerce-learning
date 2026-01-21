@@ -16,9 +16,10 @@
     </div>
     <div class="page-body">
         <form asp-action="EditSupportRequestSend" method="post">
-            <div asp-validation-summary="ModelOnly" class="message-error" class="message-error">
-                <input type="hidden" asp-for="Id" />
-                <div class="fieldset">
+            <div asp-validation-summary="ModelOnly" class="message-error" class="message-error"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="fieldset">
+                <div class="form-fields">
                     <div class="inputs">
                         <label>#</label>
                         <span><strong>@Model.Id</strong></span>
@@ -60,7 +61,7 @@
                             {
                                 var ratingPercent = Model.Rating * 20;
                                 <div class="support-request-rating">
-                                    <div style="width:@(ratingPercent)%"></div>
+                                    <div style="width:@(ratingPercent)%; height: 100%; background-color: green;"></div>
                                 </div>
                             }
                             else
@@ -74,6 +75,7 @@
                                         <input asp-for="Rating" value="4" type="radio" id="addrating_4" aria-label="@T("SupportRequest.Fields.Rating.Good")" />
                                         <input asp-for="Rating" value="5" type="radio" id="addrating_5" aria-label="@T("SupportRequest.Fields.Rating.Excellent")" />
                                     </div>
+                                    <div class="label last">@T("SupportRequest.Fields.Rating.Excellent")</div>
                                 </div>
                             }
                         </div>
@@ -84,7 +86,7 @@
             {
                 <div class="buttons">
                     <button type="submit" class="button-1">
-                        @T("SupportRequests.Rate.Button")
+                        @T("SupportRequest.Fields.Rate.Button")
                     </button>
                 </div>
             }

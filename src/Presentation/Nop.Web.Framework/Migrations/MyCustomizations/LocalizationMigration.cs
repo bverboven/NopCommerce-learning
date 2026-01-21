@@ -7,7 +7,7 @@ using Nop.Services.Localization;
 
 namespace Nop.Web.Framework.Migrations.MyCustomizations;
 
-[NopMigration("2026-01-15 12:00:00", NopVersion.FULL_VERSION, UpdateMigrationType.Localization, MigrationProcessType.Update)]
+[NopMigration("2026-01-20 12:00:00", NopVersion.FULL_VERSION, UpdateMigrationType.Localization, MigrationProcessType.Update)]
 public class LocalizationMigration : Migration
 {
     public override void Up()
@@ -82,7 +82,7 @@ public class LocalizationMigration : Migration
             ["Account.SupportRequests.ViewSupportRequest"] = "View",
             ["SupportRequests.Link.Text"] = "do you need support?",
             ["Admin.ContentManagement.MessageTemplates.Description.SupportRequest.NewSupportRequest"] = "This message template is used when a new support request is created. The message is received by a store owner.",
-            ["Admin.Contentmanagement.MessageTemplates.Description.SupportRequest.SupportRequestReply"] = "This message template is used when a support team replies to a support request. The message is received by a customer who created the support request."
+            ["Admin.ContentManagement.MessageTemplates.Description.SupportRequest.SupportRequestReply"] = "This message template is used when a support team replies to a support request. The message is received by a customer who created the support request."
         });
     }
 

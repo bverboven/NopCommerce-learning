@@ -112,6 +112,8 @@ public class SupportRequestModelFactory(CatalogSettings catalogSettings, IBaseAd
                     ? (await storeService.GetStoreByIdAsync(item.StoreId))?.Name
                     : string.Empty,
                 CustomerId = item.CustomerId,
+                CustomerInfo = $"{customer.FirstName} {customer.LastName}",
+                MessageText = item.MessageText,
                 CreatedOn = await dateTimeHelper.ConvertToUserTimeAsync(item.CreatedOnUtc, DateTimeKind.Utc)
             };
 

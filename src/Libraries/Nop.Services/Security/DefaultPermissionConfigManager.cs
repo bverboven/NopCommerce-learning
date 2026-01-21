@@ -31,6 +31,7 @@ public partial class DefaultPermissionConfigManager : IPermissionConfigManager
         new ("Admin area. Activity Log. Delete", StandardPermission.Customers.ACTIVITY_LOG_DELETE, nameof(StandardPermission.Customers), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. Activity Log. Manage types", StandardPermission.Customers.ACTIVITY_LOG_MANAGE_TYPES, nameof(StandardPermission.Customers), NopCustomerDefaults.AdministratorsRoleName),
         new ("Admin area. GDPR. Manage", StandardPermission.Customers.GDPR_MANAGE, nameof(StandardPermission.Customers), NopCustomerDefaults.AdministratorsRoleName),
+        new ("Admin area. Support Requests. Manage", StandardPermission.Configuration.MANAGE_SUPPORT_REQUESTS, nameof(StandardPermission.Customers), NopCustomerDefaults.AdministratorsRoleName),
 
         #endregion
 

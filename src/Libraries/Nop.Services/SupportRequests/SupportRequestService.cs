@@ -3,6 +3,7 @@ using Nop.Core.Domain.SupportRequests;
 using Nop.Data;
 
 namespace Nop.Services.SupportRequests;
+
 public class SupportRequestService(IRepository<SupportRequest> supportRepository) : ISupportRequestService
 {
     public Task InsertSupportRequestAsync(SupportRequest supportRequest)
@@ -18,6 +19,14 @@ public class SupportRequestService(IRepository<SupportRequest> supportRepository
     public Task DeleteSupportRequestAsync(SupportRequest supportRequest)
     {
         return supportRepository.DeleteAsync(supportRequest);
+    }
+
+    public virtual async Task DeleteOldItemsAsync()
+    {
+        var cutoffDate = DateTime.UtcNow.AddYears(-1);
+        var oldItems = await supportRepository.GetAllAsync(query =>
+            query.Where(x => x.CreatedOnUtc < cutoffDate));
+        await supportRepository.DeleteAsync(oldItems);
     }
 
     public Task<SupportRequest> GetSupportRequestByIdAsync(int supportRequestId)

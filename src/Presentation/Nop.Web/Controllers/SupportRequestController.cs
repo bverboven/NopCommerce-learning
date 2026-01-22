@@ -1,15 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.SupportRequests;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 using Nop.Services.SupportRequests;
 using Nop.Web.Factories;
+using Nop.Web.Framework.Mvc.Filters;
 using Nop.Web.Models.SupportRequests;
 
 namespace Nop.Web.Controllers;
 
 public class SupportRequestController(ISupportRequestService service, SupportRequestModelFactory modelFactory,
-    ICustomerService customerService, IWorkContext workContext, IStoreContext storeContext) : BasePublicController
+    ICustomerService customerService, IWorkContext workContext, IStoreContext storeContext,
+    ILocalizationService localizationService, CaptchaSettings captchaSettings) : BasePublicController
 {
     public async Task<IActionResult> CustomerSupportRequests()
     {
@@ -37,14 +41,23 @@ public class SupportRequestController(ISupportRequestService service, SupportReq
             return Challenge();
         }
 
-        var model = new CreateSupportRequestModel();
+        var model = new CreateSupportRequestModel
+        {
+            DisplayCaptcha = captchaSettings.Enabled
+        };
 
         return View(model);
     }
 
+    [ValidateCaptcha]
     [HttpPost]
     public virtual async Task<IActionResult> CreateSupportRequestSend(CreateSupportRequestModel model, bool captchaValid)
     {
+        if (captchaSettings.Enabled && !captchaValid)
+        {
+            ModelState.AddModelError(string.Empty, await localizationService.GetResourceAsync("Common.WrongCaptchaMessage"));
+        }
+
         var currentCustomer = await workContext.GetCurrentCustomerAsync();
 
         if (await customerService.IsGuestAsync((currentCustomer)))
@@ -66,6 +79,8 @@ public class SupportRequestController(ISupportRequestService service, SupportReq
 
             return RedirectToAction("CustomerSupportRequests");
         }
+
+        model.DisplayCaptcha = captchaSettings.Enabled;
 
         return View("CreateSupportRequest", model);
     }

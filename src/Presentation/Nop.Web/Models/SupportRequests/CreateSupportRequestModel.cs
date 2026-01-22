@@ -7,4 +7,6 @@ public record CreateSupportRequestModel : BaseNopEntityModel
 {
     [NopResourceDisplayName("SupportRequest.Fields.MessageText")]
     public string MessageText { get; set; }
+
+    public bool DisplayCaptcha { get; set; }
 }

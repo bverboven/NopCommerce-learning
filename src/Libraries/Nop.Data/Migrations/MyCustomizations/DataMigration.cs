@@ -1,6 +1,7 @@
 ﻿using FluentMigrator;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.ScheduleTasks;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Data.Migrations.MyCustomizations;
@@ -50,7 +51,7 @@ public class DataMigration(INopDataProvider dataProvider, EmailAccountSettings e
             });
         }
 
-        if(!messageTemplateTable.Any(mt => string.Compare(mt.Name,
+        if (!messageTemplateTable.Any(mt => string.Compare(mt.Name,
                 MessageTemplateSystemNames.STORE_OWNER_SUPPORT_REQUEST_NOTIFICATION,
                 StringComparison.OrdinalIgnoreCase) == 0))
         {
@@ -61,6 +62,23 @@ public class DataMigration(INopDataProvider dataProvider, EmailAccountSettings e
                 Body = "A new <a href=\"%Store.URL%admin/SupportRequest/Edit/%SupportRequest.Id%/>support request</a> has been submitted by %Customer.FullName%. <a href=\"%SupportRequest.Url%\">View the request</a>.",
                 EmailAccountId = emailAccountSettings.DefaultEmailAccountId,
                 IsActive = true
+            });
+        }
+
+        // add new scheduled task to remove old support requests
+        var scheduleTaskTable = dataProvider.GetTable<ScheduleTask>();
+        var scheduleTaskName = "Delete old support requests";
+
+        if (!scheduleTaskTable.Any(st => string.Compare(st.Name, scheduleTaskName, StringComparison.OrdinalIgnoreCase) == 0))
+        {
+            dataProvider.InsertEntity(new ScheduleTask
+            {
+                Name = "Remove old support requests",
+                Type = "Nop.Services.SupportRequests.DeleteSupportRequestsTask, Nop.Services",
+                Seconds = 30,
+                Enabled = true,
+                StopOnError = false,
+                LastEnabledUtc = DateTime.UtcNow
             });
         }
     }

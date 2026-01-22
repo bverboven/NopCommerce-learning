@@ -24,6 +24,10 @@
                         <textarea asp-for="MessageText"></textarea>
                         <span asp-validation-for="MessageText"></span>
                     </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <nop-captcha />
+                    }
                 </div>
             </div>
             <div class="buttons">
